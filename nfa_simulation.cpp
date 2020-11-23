@@ -3,7 +3,7 @@
  * @author Miqueas (Sozhia) Garcia Gonzalez
  * CONTACT: sozhia.business@gmail.com
  * @brief Main function
- * @version 1.0
+ * @version 1.5
  * @date 2020-11-21
  * COLLEGE: Universidad de la Laguna
  * DEGREE: Computer Science
@@ -37,7 +37,10 @@ int main (int argc, char** argv) {
     f_output = argv[3];
     f_input = argv[2];
     f_nfa = argv[1];
+    Alphabet alphabet;
+    alphabet.SetAlphabet();
     Automaton automaton(f_nfa);
+    automaton.SetAlphabet(alphabet);
     automaton.CheckInputData(f_input);
     automaton.PrintOutputData(f_output);
   }

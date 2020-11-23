@@ -3,7 +3,7 @@
  * @author Miqueas (Sozhia) Garcia Gonzalez
  * CONTACT: sozhia.business@gmail.com
  * @brief Automaton class definition
- * @version 1.0
+ * @version 1.5
  * @date 2020-11-21
  * COLLEGE: Universidad de la Laguna
  * DEGREE: Computer Science
@@ -61,6 +61,14 @@ Automaton::Automaton(std::string input_nfa) {
   } 
 }
 /**
+ * @brief Asign an alphabet to the automaton (Σ)
+ * 
+ * @param alphabet object
+ */
+void Automaton::SetAlphabet(Alphabet &alphabet) {
+  alphabet_ = alphabet;
+}
+/**
  * @brief Check words from a file
  * 
  * @param input_file container of words
@@ -90,10 +98,12 @@ void Automaton::PrintOutputData(std::string output_file) {
   if (outdatafile.is_open()) {
     for (unsigned int aux = 0; aux < words_.size(); aux ++) {
       word = CheckWord(words_[aux]);
-      if (word) {
-        outdatafile << "true \n";
+      if (!supported_symbol_) {
+        outdatafile << "Error \n";
+      } else if (word) {
+        outdatafile << "True \n";
       } else { 
-        outdatafile << "false \n";
+        outdatafile << "False \n";
       }
     }
   } else {
@@ -109,6 +119,10 @@ void Automaton::PrintOutputData(std::string output_file) {
  * @return false if it not makes final state
  */
 bool Automaton::CheckWord(std::string word) {
+  supported_symbol_ = true;
+  CheckAlphabet(word);
+  if ((word.size() < states_.size()) | (!supported_symbol_))
+    return false;
   unsigned int counter = 0;
   bool final;
   unsigned int actual_state;
@@ -132,4 +146,13 @@ bool Automaton::CheckWord(std::string word) {
     counter ++;
   } while(counter < word.size());
   return final;
+}
+bool Automaton::CheckAlphabet(std::string word) {
+  for(unsigned int aux = 0; aux < word.size(); aux++) {
+    if (alphabet_.CheckSymbol(word[aux]) == false) {
+      supported_symbol_ = false;
+      break;
+    }
+  }
+  return supported_symbol_;
 }

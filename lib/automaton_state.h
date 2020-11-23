@@ -3,7 +3,7 @@
  * @author Miqueas (Sozhia) Garcia Gonzalez
  * CONTACT: sozhia.business@gmail.com
  * @brief states 
- * @version 1.0
+ * @version 1.5
  * @date 2020-11-21
  * COLLEGE: Universidad de la Laguna
  * DEGREE: Computer Science
@@ -81,8 +81,12 @@ class AutomatonState {
   unsigned int NextState(unsigned int id,char c) {
     unsigned int next_id = 999;
     for (unsigned int aux = 0; aux < linked_states_.size(); aux++) {
-      if (linked_states_[aux].second != id && linked_states_[aux].first == c) {
-        next_id = linked_states_[aux].second;
+      if (linked_states_[aux].first == c) {
+        if (linked_states_[aux].second != id) {
+          next_id = linked_states_[aux].second;
+        } else {
+          next_id = id;
+        }
       }
     }
     return next_id;

@@ -1,6 +1,6 @@
-c
-aaaa
-baba
 bbbb
+c*?0
+aaaa?
+baba
 abbb
 bbbc

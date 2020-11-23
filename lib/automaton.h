@@ -25,17 +25,12 @@ class Automaton {
   std::vector <char> stimulations_; // Stimulations expected in this automaton 
   Alphabet alphabet_; // finite set of input symbols
   std::vector<AutomatonState> states_; // finite set of states
-  std::vector<unsigned int> states_pathing_; // pathing to get final state
-  bool** predecessor_;
+  std::vector<std::string> words_; // words to parse
   
  public:
   Automaton();
   Automaton(std::string input_nfa);
-  void StateInput(char c, unsigned int id);
-  //void PrintAutomatonTable();
-  void SetAutomatonState ();
-  void CheckInputData(std::string file);
+  void CheckInputData(std::string input_file);
+  void PrintOutputData(std::string output_file);
   bool CheckWord(std::string word);
-  void SetPredecessors();
-  
-};
+ };

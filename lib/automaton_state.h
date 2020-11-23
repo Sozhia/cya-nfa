@@ -63,23 +63,31 @@ class AutomatonState {
    * 
    * @param s 
    */
-  void SetStart(bool s) {start_ = s; q_ = 0;}
-/**
- * @brief Pushback an state to his linked ones
- * 
- * @param c 
- * @param id 
- */
+  void SetStart(bool s) {start_ = s;}
+  /**
+   * @brief Pushback an state to his linked ones
+   * 
+   * @param c 
+   * @param id 
+   */
   void SetLinked(char c, unsigned int id) {linked_states_.push_back(std::make_pair(c,id));}
-
-  unsigned int GetLinked(unsigned int id) {
-    for (unsigned int i=0; i < linked_states_.size(); i++) {
-      if (linked_states_[i].second = id)
-        return i;
-      else
-        return 999;
+  /**
+   * @brief Return the next id by stimulate an state and it is not itself
+   * 
+   * @param id of the state
+   * @param c stimulation
+   * @return unsigned int next state id
+   */
+  unsigned int NextState(unsigned int id,char c) {
+    unsigned int next_id = 999;
+    for (unsigned int aux = 0; aux < linked_states_.size(); aux++) {
+      if (linked_states_[aux].second != id && linked_states_[aux].first == c) {
+        next_id = linked_states_[aux].second;
+      }
     }
+    return next_id;
   }
+  unsigned int GetLinked() {return linked_states_.size();}
   /**
    * @brief Destroy the Automaton State object
    * 

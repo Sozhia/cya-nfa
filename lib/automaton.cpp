@@ -11,7 +11,6 @@
  * REFERENCE: https://github.com/Sozhia/lib
  */
 #include "./automaton.h"
-
 /**
  * @brief Parameterized Automaton constructor  
  * 
@@ -23,33 +22,31 @@ Automaton::Automaton(std::string input_nfa) {
   std::string line;
   if (myfile.is_open()) {
     myfile >> num_states;
-    std::cout << "Numero de estados: "<< num_states << std::endl;
-    //states_.resize(num_states); Q : (finite set of states) size
+    //Q : (finite set of states) size
     for (unsigned int states = 0; states < num_states; states++) {
       AutomatonState state;
       states_.push_back(state);
-      std::cout << "Creado y almacenado objeto estado: " << states << std::endl;
     }
     myfile >> starting;
-    std::cout << "Estado inicial asignado a q"<< starting << std::endl;
-    states_[starting].SetStart(1); // q0 : initial (or start) state
+    states_[starting].SetStart(true); // q0 : initial (or start) state
     // State identifier to operate
     while(!myfile.eof()) {
       unsigned int state_identifier;
       myfile >> state_identifier;
-      std::cout << "Operando con estado q" << state_identifier << std::endl;
       // Is an accepting state?
-      bool accepting;
-      myfile >> accepting;
-      std::cout << "Aceptacion = " << accepting << std::endl;
-      if (accepting) {
-        states_[state_identifier].SetFinal(1);
-        std::cout << "Confirmado aceptacion" << std::endl;
+      bool is_accepting;
+      int accepted;
+      myfile >> accepted;
+      if (accepted == 1)
+        is_accepting = true;
+      if (is_accepting) {
+        states_[state_identifier].SetFinal(true);
+      } else {
+        states_[state_identifier].SetFinal(false);
       }
       // Num of state transitions
       unsigned int num_transitions;
       myfile >> num_transitions;
-      std::cout << "Numero de transiciones para el estado q" << state_identifier << ": " << num_transitions << std::endl;
       for (unsigned int aux = 0; aux < num_transitions; aux++) {
         // Transitions alike [Stimulation -> Next_State_ID] by pair {char,unsigned int}
         char stimulation;
@@ -60,63 +57,79 @@ Automaton::Automaton(std::string input_nfa) {
     }
     myfile.close();
   } else {
-    std::cout << "Unable to open file " << input_nfa << std::endl;;
+    std::cout << "Unable to open file " << input_nfa << std::endl;
   } 
 }
-/* DISEÑARLO POR TILES = 10/10 NO SEAS VAGO HDP
-void Automaton::PrintAutomaton() {
-
-}*/
 /**
  * @brief Check words from a file
  * 
- * @param file file that contains words
+ * @param input_file container of words
+ * @param output_file result of parsing with automata
  */
-void Automaton::CheckInputData(std::string file) {
-  std::ifstream indatafile(file);
+void Automaton::CheckInputData(std::string input_file) {
+  std::ifstream indatafile(input_file);
   std::string parser_data;
   if (indatafile.is_open()) {
     while(!indatafile.eof()) {
       indatafile >> parser_data;
-      CheckWord(parser_data);
+      words_.push_back(parser_data);
     }
     indatafile.close();
   } else {
-    std::cout << "Unable to open file " << file << std::endl;
+    std::cout << "Unable to open file " << input_file << std::endl;
   } 
 }
-
-void Automaton::SetPredecessors() {
-  unsigned int id_final;
-  for (unsigned int aux = 0; aux < states_.size(); aux++) {
-    if(states_[aux].GetFinal()){
-      id_final = aux;
-    }
-  }
-  predecessor_= new bool* [states_.size()];
-  for (unsigned int i = 0; i < states_.size(); i++) 
-    predecessor_[i] = new bool [states_.size()];
-  unsigned int parsing = id_final;
-  do {
-    for (unsigned int i = 0; i < states_.size(); i++) {
-      for (unsigned int j = 0; j < states_.size(); j++) {
-        if (!predecessor_[i][j] && j == parsing && ) {
-
-        } else {
-          predecessor_[i][j] = false;
-        }
+/**
+ * @brief Print into a file the result of parsing words letter by letter
+ * 
+ * @param output_file 
+ */
+void Automaton::PrintOutputData(std::string output_file) {
+  bool word;
+  std::ofstream outdatafile(output_file);
+  if (outdatafile.is_open()) {
+    for (unsigned int aux = 0; aux < words_.size(); aux ++) {
+      word = CheckWord(words_[aux]);
+      if (word) {
+        outdatafile << "true \n";
+      } else { 
+        outdatafile << "false \n";
       }
     }
-  } while (!states_[parsing].GetStart());
-
+  } else {
+    std::cout << "Unable to open file " << output_file << std::endl;
+  }
+  outdatafile.close();
 }
 /**
- * @brief 
+ * @brief Split a word into characters (stimulus) and try to get a final state
  * 
- * @param word 
- * @return true 
- * @return false 
+ * @param word word to split into characters
+ * @return true if it makes final state
+ * @return false if it not makes final state
  */
 bool Automaton::CheckWord(std::string word) {
-
+  unsigned int counter = 0;
+  bool final;
+  unsigned int actual_state;
+  for (unsigned int aux = 0; aux < states_.size(); aux ++) {
+    if (states_[aux].GetStart()) {
+      actual_state = aux;
+      break;
+    }
+  }
+  do {
+    final = 0;
+    if (states_[actual_state].GetFinal()) {
+      final = 1;
+      break;
+    }
+    actual_state = states_[actual_state].NextState(actual_state,word[counter]);
+    if (actual_state == 999) {
+      final = 0;
+      break;
+    }
+    counter ++;
+  } while(counter < word.size());
+  return final;
 }

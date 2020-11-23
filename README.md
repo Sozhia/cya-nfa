@@ -22,3 +22,20 @@ An example:
 
 ![nfa_configuration](./img/nfa.gif)
 
+## Running the program
+After building the program, you can execute it with:
+```bash
+./nfa_simulation input.nfa input.txt output.txt
+```
+where:
+* input.nf -> nfa specifications
+* input.txt -> words automaton have to parse
+* output.txt -> parsing result
+
+## Use example by images
+#### NFA CONFIGURATION FILE
+![nfa_configuration](./img/nfa_input.gif)
+#### DATA INPUT (WORDS)
+![nfa](./img/input.gif)
+#### PROCESSED OUTPUT
+![nfa_configuration](./img/output.gif)

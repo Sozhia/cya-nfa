@@ -37,10 +37,7 @@ int main (int argc, char** argv) {
     f_output = argv[3];
     f_input = argv[2];
     f_nfa = argv[1];
-    Alphabet alphabet;
-    alphabet.SetAlphabet();
     Automaton automaton(f_nfa);
-    automaton.SetAlphabet(alphabet);
     automaton.CheckInputData(f_input);
     automaton.PrintOutputData(f_output);
   }

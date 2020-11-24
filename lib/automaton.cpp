@@ -51,7 +51,14 @@ Automaton::Automaton(std::string input_nfa) {
         // Transitions alike [Stimulation -> Next_State_ID] by pair {char,unsigned int}
         char stimulation;
         unsigned int next_id;
+        bool is_in_alphabet;
         myfile >> stimulation >> next_id;
+        for (unsigned int foo = 0; aux < alphabet_.size(); foo ++) {
+          if (stimulation == alphabet_[foo])
+            is_in_alphabet = true;
+        }
+        if (!is_in_alphabet)
+          alphabet_.SetSymbol(stimulation);
         states_[state_identifier].SetLinked(stimulation, next_id);
       }
     }

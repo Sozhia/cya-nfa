@@ -3,7 +3,7 @@
  * @author Miqueas (Sozhia) Garcia Gonzalez
  * CONTACT: sozhia.business@gmail.com
  * @brief Automaton class definition
- * @version 1.5
+ * @version 1.10.2
  * @date 2020-11-21
  * COLLEGE: Universidad de la Laguna
  * DEGREE: Computer Science
@@ -71,10 +71,10 @@ Automaton::Automaton(std::string input_nfa) {
  * @brief Asign an alphabet to the automaton (Σ)
  * 
  * @param alphabet object
- */
+ //Si problemas con el alphabet
 void Automaton::SetAlphabet(Alphabet &alphabet) {
   alphabet_ = alphabet;
-}
+}/*
 /**
  * @brief Check words from a file
  * 
